@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "185801875755",
+    "project_id": "mubooks-d1d86",
+    "storage_bucket": "mubooks-d1d86.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185801875755:android:b08e185f534650f368656e",
+        "android_client_info": {
+          "package_name": "com.example.mubooks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185801875755-bgq4mgonhorqrg06pufctv2uedng1jr1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtB-xd0Hy5_lSmJ26_wtAWcWdli_UICeU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185801875755-bgq4mgonhorqrg06pufctv2uedng1jr1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

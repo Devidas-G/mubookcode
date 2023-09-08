@@ -4,7 +4,8 @@ class LoadingScreen extends StatefulWidget {
   var isDarkMode;
   VoidCallback retry;
 
-  LoadingScreen({Key? key,required this.isDarkMode,required this.retry}) : super(key: key);
+  LoadingScreen({Key? key, required this.isDarkMode, required this.retry})
+      : super(key: key);
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
@@ -27,9 +28,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   ),
                   ElevatedButton(
                       onPressed: widget.retry,
-                      child: const Text("Retry"),
-                      style:
-                          ElevatedButton.styleFrom(primary: Colors.tealAccent)),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.tealAccent),
+                      child: const Text("Retry")),
                 ],
               )
             : const SizedBox(

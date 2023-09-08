@@ -48,14 +48,14 @@ class _PdfViewState extends State<PdfView> {
                   focusNode: myFocusNode,
                   cursorColor: Colors.grey,
                   controller: textEditingController,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: "Search...",
                     hintStyle: TextStyle(color: Colors.grey),
                   ),
                   onSubmitted: (val) async {
-                    _searchResult = await _pdfViewerController
+                    _searchResult = _pdfViewerController
                         .searchText(textEditingController.text);
                     if(_searchResult.totalInstanceCount==0){
                       Fluttertoast.showToast(msg: "No match found",

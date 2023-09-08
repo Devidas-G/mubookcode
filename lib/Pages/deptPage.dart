@@ -8,7 +8,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mubooks/Pages/pdfview.dart';
 import 'package:mubooks/Widgets.dart';
 import 'package:mubooks/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DeptPage extends StatefulWidget {
@@ -32,18 +31,19 @@ class _DeptPageState extends State<DeptPage> {
   Map tabList = {};
   List title = ['Sem 1', 'Sem 2'];
   Map files = {};
-  ReceivePort _port = ReceivePort();
+  final ReceivePort _port = ReceivePort();
 
   @override
   void initState() {
     super.initState();
     getInfo();
-    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
       String id = data[0];
       DownloadTaskStatus status = data[1];
       int progress = data[2];
-      setState((){ });
+      setState(() {});
     });
 
     FlutterDownloader.registerCallback(downloadCallback);
@@ -56,8 +56,9 @@ class _DeptPageState extends State<DeptPage> {
   }
 
   @pragma('vm:entry-point')
-  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-    final SendPort? send = IsolateNameServer.lookupPortByName('downloader_send_port');
+  static void downloadCallback(String id, int status, int progress) {
+    final SendPort? send =
+        IsolateNameServer.lookupPortByName('downloader_send_port');
     send!.send([id, status, progress]);
   }
 
@@ -73,35 +74,31 @@ class _DeptPageState extends State<DeptPage> {
 
   getList() async {
     var resp = await fetchDept(
-        widget.stream + "/" + widget.faculty + "/" + widget.dept);
+        "${widget.stream}/${widget.faculty}/${widget.dept}");
     tabList = resp;
   }
 
   getFiles(String tab, String item) async {
-    var resp = await fetchList(widget.stream +
-        "/" +
-        widget.faculty +
-        "/" +
-        widget.dept +
-        "/" +
-        tab +
-        "/" +
-        item);
+    var resp = await fetchList("${widget.stream}/${widget.faculty}/${widget.dept}/$tab/$item");
     files = resp;
   }
 
-  Future download(String url,String filename) async {
+  Future download(String url, String filename) async {
     var status = await Permission.storage.request();
-    if(status.isGranted){
+    if (status.isGranted) {
       final dir = Directory("/storage/emulated/0/Download/");
-      if(await dir.exists()){
-        var pos = url.lastIndexOf('/')+1;
-        filename = filename.isEmpty?(pos != -1)? url.substring(pos, url.length): url:filename;
-        if(await File(dir.path+filename).exists()){
-          filename=await fileCheck(filename, dir);
+      if (await dir.exists()) {
+        var pos = url.lastIndexOf('/') + 1;
+        filename = filename.isEmpty
+            ? (pos != -1)
+                ? url.substring(pos, url.length)
+                : url
+            : filename;
+        if (await File(dir.path + filename).exists()) {
+          filename = await fileCheck(filename, dir);
           print(filename);
           download(url, filename);
-        }else{
+        } else {
           await FlutterDownloader.enqueue(
               url: url,
               savedDir: dir.path,
@@ -109,23 +106,24 @@ class _DeptPageState extends State<DeptPage> {
               showNotification: true,
               openFileFromNotification: true);
         }
-      }else{
+      } else {
         dir.create();
-        download(url,filename);
+        download(url, filename);
       }
     }
   }
 
-  Future fileCheck(String filename,Directory dir)async{
-    if(await File(dir.path+filename).exists()){
+  Future fileCheck(String filename, Directory dir) async {
+    if (await File(dir.path + filename).exists()) {
       var count = 1;
       var pos = filename.lastIndexOf('.');
-      String extension = (pos != -1)? filename.substring(pos, filename.length): filename;
-      filename = (pos != -1)? filename.substring(0, pos): filename;
-      String finalfilename = filename + "($count)"+extension;
-      while(await File(dir.path+finalfilename).exists()){
+      String extension =
+          (pos != -1) ? filename.substring(pos, filename.length) : filename;
+      filename = (pos != -1) ? filename.substring(0, pos) : filename;
+      String finalfilename = "$filename($count)$extension";
+      while (await File(dir.path + finalfilename).exists()) {
         count++;
-        finalfilename =  filename + "($count)"+extension;
+        finalfilename = "$filename($count)$extension";
       }
       return finalfilename;
     }
@@ -339,8 +337,8 @@ class _DeptPageState extends State<DeptPage> {
                                                                                 }
                                                                                 return IconButton(
                                                                                     onPressed: () async {
-                                                                                      var url = await fetchUrl(widget.stream + "/" + widget.faculty + "/" + widget.dept + "/" + tab.key + "/" + text, title, "",e.key);
-                                                                                      download(url,"");
+                                                                                      var url = await fetchUrl("${widget.stream + "/" + widget.faculty + "/" + widget.dept + "/" + tab.key}/" + text, title, "", e.key);
+                                                                                      download(url, "");
                                                                                     },
                                                                                     icon: const Icon(Icons.download));
                                                                               }()),
@@ -350,7 +348,7 @@ class _DeptPageState extends State<DeptPage> {
                                                                           onTap:
                                                                               () async {
                                                                             try {
-                                                                              var url = await fetchUrl(widget.stream + "/" + widget.faculty + "/" + widget.dept + "/" + tab.key + "/" + text, title, "",e.key);
+                                                                              var url = await fetchUrl("${widget.stream + "/" + widget.faculty + "/" + widget.dept + "/" + tab.key}/" + text, title, "", e.key);
                                                                               Navigator.push(
                                                                                   context,
                                                                                   MaterialPageRoute(
